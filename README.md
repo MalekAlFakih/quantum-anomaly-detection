@@ -4,7 +4,7 @@ Quantum Anomaly Detection is a Python package that leverages quantum computing (
 
 ## Installation
 ```bash
-git clone https://github.com/your-username/quantum-anomaly-detection.git
+git clone https://github.com/MalekAlFakih/quantum-anomaly-detection.git
 cd quantum-anomaly-detection
 pip install -e .
 ```
