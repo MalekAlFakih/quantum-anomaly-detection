@@ -7,7 +7,7 @@ To install Quantum Anomaly Detection, clone the repository:
 
 .. code-block:: bash
 
-   git clone https://github.com/your-username/quantum-anomaly-detection.git
+   git clone https://github.com/MalekAlFakih/quantum-anomaly-detection.git
    cd quantum-anomaly-detection
    pip install -e .
 
