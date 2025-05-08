@@ -17,3 +17,11 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+QuantumAnomalyDetector
+======================
+
+.. automodule:: quantum_anomaly_detection.detector
+   :members:
+   :undoc-members:
+   :show-inheritance:
