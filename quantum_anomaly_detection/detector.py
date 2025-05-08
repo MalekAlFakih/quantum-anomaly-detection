@@ -1,5 +1,6 @@
 from typing import Optional
 import numpy as np
+from qiskit_aer import Aer
 from qiskit import Aer, QuantumCircuit, transpile, assemble, execute
 from qiskit.visualization import plot_histogram
 

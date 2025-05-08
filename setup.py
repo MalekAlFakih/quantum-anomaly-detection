@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
 
+
 setup(
+
     name='quantum-anomaly-detection',
-    version='0.1.0',
+    version='0.1.1',
     author='Mohamed Malek Al Fakih & Abdellah Bichlifen',
     author_email='your.email@example.com',
     description='A Python package for quantum-based anomaly detection.',
@@ -22,3 +24,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
 )
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+],
