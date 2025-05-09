@@ -9,6 +9,6 @@ The score returned is:
 
 .. math::
 
-   \text{score}(x) = \frac{\text{avg\_dist}(x, kNN)}{\text{mean\_local\_density}(kNN)}
+   \text{score}(x) = \frac{\mathrm{avg\_dist}(x, \mathrm{kNN})}{\mathrm{mean\_density}(kNN)}
 
 This mimics the behavior of LOF while remaining interpretable and efficient.
