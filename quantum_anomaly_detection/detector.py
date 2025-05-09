@@ -12,50 +12,55 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 class QuantumAnomalyDetector:
     """
-    A basic anomaly detector that uses distance to the nearest training sample
-    as an anomaly score. Thresholding this score allows for classification.
+    Quantum-inspired anomaly detector using average distance to k-nearest training samples.
     """
 
-    def __init__(self, threshold=2.5):
+    def __init__(self, k=5, contamination=0.1):
         """
-        Initialize the detector.
-
         Parameters:
         ----------
-        threshold : float
-            The decision threshold above which a score is considered anomalous.
+        k : int
+            Number of nearest neighbors to consider.
+        contamination : float
+            Expected proportion of anomalies (used to compute threshold).
         """
-        self.threshold = threshold
+        self.k = k
+        self.contamination = contamination
         self.training_data = None
+        self.threshold = None
 
     def fit(self, X):
         """
-        Fit the model with training data.
+        Fit the model using training data.
 
         Parameters:
         ----------
-        X : array-like of shape (n_samples, n_features)
-            Training data assumed to contain only normal samples.
+        X : array-like, shape (n_samples, n_features)
+            Training data assumed to be mostly normal.
         """
         self.training_data = np.array(X)
         if self.training_data.ndim == 1:
             self.training_data = self.training_data.reshape(-1, 1)
 
-    def predict(self, X, batch_size=512):
+        # Calculate self-scores on training data for automatic threshold
+        dists = euclidean_distances(self.training_data, self.training_data)
+        np.fill_diagonal(dists, np.inf)
+        knn_scores = np.sort(dists, axis=1)[:, :self.k].mean(axis=1)
+        self.threshold = np.percentile(knn_scores, 100 * (1 - self.contamination))
+
+    def predict(self, X):
         """
-        Predict anomaly scores in safe memory-efficient batches.
+        Predict anomaly scores for new samples.
 
         Parameters:
         ----------
         X : array-like, shape (n_samples, n_features)
-            Test data.
-        batch_size : int
-            Number of samples per batch (default: 512).
+            Input samples.
 
         Returns:
         -------
-        scores : ndarray
-            Minimum distances to training samples for each test input.
+        scores : ndarray, shape (n_samples,)
+            Average k-NN distance to training data (higher = more anomalous).
         """
         X = np.array(X)
         if X.ndim == 1:
@@ -63,16 +68,13 @@ class QuantumAnomalyDetector:
         if self.training_data is None:
             raise ValueError("Model has not been fit yet.")
 
-        scores = []
-        for i in range(0, len(X), batch_size):
-            batch = X[i:i + batch_size]
-            dists = euclidean_distances(batch, self.training_data)
-            scores.append(np.min(dists, axis=1))
-        return np.concatenate(scores)
+        dists = euclidean_distances(X, self.training_data)
+        scores = np.sort(dists, axis=1)[:, :self.k].mean(axis=1)
+        return scores
 
     def is_anomalous(self, score):
         """
-        Check if a score exceeds the threshold.
+        Determine whether a score is anomalous.
 
         Parameters:
         ----------
@@ -82,6 +84,8 @@ class QuantumAnomalyDetector:
         Returns:
         -------
         bool
-            True if score > threshold (anomalous), else False.
+            True if score exceeds threshold.
         """
+        if self.threshold is None:
+            raise ValueError("Threshold is not set. Run fit() first.")
         return score > self.threshold
