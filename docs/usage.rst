@@ -1,17 +1,14 @@
-.. _usage:
-
 Usage
 =====
 
-This section shows how to use the `QuantumAnomalyDetector` class.
+Import and use the detector:
 
 .. code-block:: python
 
    from quantum_anomaly_detection import QuantumAnomalyDetector
-   import numpy as np
-   data = np.random.rand(10, 2)
-   detector = QuantumAnomalyDetector(threshold=0.6)
-   detector.fit(data)
-   scores = detector.predict(data)
-   print("Anomaly Scores:", scores)
-   print("Is anomalous:", detector.is_anomalous(scores[0]))
+
+   model = QuantumAnomalyDetector(k=10, contamination=0.05)
+   model.fit(X_train)
+   scores = model.predict(X_test)
+   preds = [model.is_anomalous(s) for s in scores]
+

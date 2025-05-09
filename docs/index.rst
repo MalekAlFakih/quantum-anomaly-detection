@@ -1,7 +1,10 @@
 .. Quantum Anomaly Detection documentation master file
 
 Welcome to Quantum Anomaly Detection's documentation!
-=====================================================
+======================================================
+
+**QuantumAnomalyDetector** is a quantum-inspired anomaly detection toolkit using locally normalized k-NN scoring.
+It supports multivariate anomaly detection and is designed for benchmarking against classical methods.
 
 .. toctree::
    :maxdepth: 2
@@ -9,19 +12,6 @@ Welcome to Quantum Anomaly Detection's documentation!
 
    installation
    usage
-   api_reference
+   api
+   examples
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-QuantumAnomalyDetector
-======================
-
-.. automodule:: quantum_anomaly_detection.detector
-   :members:
-   :undoc-members:
-   :show-inheritance:

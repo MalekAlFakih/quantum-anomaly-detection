@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: quantum-anomaly-detection
-Version: 0.1.91
+Version: 0.2.1
 Summary: A Python package for quantum-based anomaly detection.
 Home-page: https://github.com/MalekAlFakih/SciPy
 Author: Mohamed Malek Al Fakih & Abdellah Bichlifen

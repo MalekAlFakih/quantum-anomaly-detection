@@ -1,24 +1,16 @@
-.. _installation:
-
 Installation
 ============
 
-To install Quantum Anomaly Detection, clone the repository:
+To install the latest version from GitHub:
 
 .. code-block:: bash
 
-   git clone https://github.com/MalekAlFakih/quantum-anomaly-detection.git
-   cd quantum-anomaly-detection
-   pip install -e .
+   pip install git+https://github.com/MalekAlFakih/quantum-anomaly-detection.git
 
-Requirements
-------------
+This requires Python 3.8+.
 
+Dependencies include:
 - numpy
-- qiskit
 - matplotlib
+- qiskit
 - jupyter
-
-.. code-block:: bash
-
-   pip install -r requirements.txt
