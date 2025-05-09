@@ -41,19 +41,21 @@ class QuantumAnomalyDetector:
         if self.training_data.ndim == 1:
             self.training_data = self.training_data.reshape(-1, 1)
 
-    def predict(self, X):
+    def predict(self, X, batch_size=1000):
         """
-        Predict anomaly scores for new samples.
+    Predict anomaly scores in batches to avoid memory crashes.
 
-        Parameters:
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            Input samples to score.
+    Parameters:
+    ----------
+    X : array-like, shape (n_samples, n_features)
+        Test data.
+    batch_size : int
+        Number of test points to process at once.
 
-        Returns:
-        -------
-        scores : ndarray of shape (n_samples,)
-            Anomaly scores (lower is more normal).
+    Returns:
+    -------
+    scores : ndarray
+        Minimum distance to training data (proxy for anomaly score).
         """
         X = np.array(X)
         if X.ndim == 1:
@@ -61,9 +63,12 @@ class QuantumAnomalyDetector:
         if self.training_data is None:
             raise ValueError("Model has not been fit yet.")
 
-        distances = euclidean_distances(X, self.training_data)
-        scores = np.min(distances, axis=1)
-        return scores
+        scores = []
+        for i in range(0, len(X), batch_size):
+            batch = X[i:i + batch_size]
+            dists = euclidean_distances(batch, self.training_data)
+            scores.extend(np.min(dists, axis=1))
+        return np.array(scores)
 
     def is_anomalous(self, score):
         """
