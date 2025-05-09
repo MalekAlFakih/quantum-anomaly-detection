@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
 
     name='quantum-anomaly-detection',
-    version='0.1.7',
+    version='0.1.91',
     author='Mohamed Malek Al Fakih & Abdellah Bichlifen',
     author_email='your.email@example.com',
     description='A Python package for quantum-based anomaly detection.',
