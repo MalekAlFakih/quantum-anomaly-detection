@@ -1,15 +1,15 @@
-# Quantum Anomaly Detection
+
 
 Quantum Anomaly Detection is a Python package that leverages quantum computing (via Qiskit) to detect anomalies in datasets.
 
-## Installation
+
 ```bash
 git clone https://github.com/MalekAlFakih/quantum-anomaly-detection.git
 cd quantum-anomaly-detection
 pip install -e .
 ```
 
-## Usage
+
 ```python
 from quantum_anomaly_detection import QuantumAnomalyDetector
 import numpy as np

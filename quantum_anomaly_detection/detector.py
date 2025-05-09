@@ -42,7 +42,6 @@ class QuantumAnomalyDetector:
         if self.training_data.ndim == 1:
             self.training_data = self.training_data.reshape(-1, 1)
 
-        # Self-score on training data for threshold calibration
         train_scores = self._lof_score(self.training_data)
         self.threshold = np.percentile(train_scores, 100 * (1 - self.contamination))
 
@@ -94,14 +93,14 @@ class QuantumAnomalyDetector:
         dists = euclidean_distances(X, self.training_data)
         knn_dist_X = np.sort(dists, axis=1)[:, :self.k].mean(axis=1)
 
-        # For normalization, compute density of nearest neighbors too
+        
         train_dists = euclidean_distances(self.training_data, self.training_data)
         np.fill_diagonal(train_dists, np.inf)
         knn_dist_neighbors = np.sort(train_dists, axis=1)[:, :self.k].mean(axis=1)
 
-        # Take mean of all training densities for normalization
+        
         ref_density = np.mean(knn_dist_neighbors)
 
-        # Score = how much more distant than typical local density
+        
         scores = knn_dist_X / (ref_density + 1e-10)
         return scores
