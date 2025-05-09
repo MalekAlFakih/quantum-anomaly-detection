@@ -1,68 +1,82 @@
-from typing import Optional
+"""
+QuantumAnomalyDetector
+-----------------------
+A simple anomaly detection model based on minimum Euclidean distance to training data.
+
+Supports multivariate inputs. Can be used as a classical proxy for quantum behavior.
+
+"""
+
 import numpy as np
-from qiskit_aer import Aer
-from qiskit import QuantumCircuit, transpile, assemble, execute
-from qiskit.visualization import plot_histogram
+from sklearn.metrics.pairwise import euclidean_distances
 
 class QuantumAnomalyDetector:
     """
-    QuantumAnomalyDetector class for quantum-based anomaly detection.
-    
-    Attributes:
-        backend (str): The quantum simulator backend.
-        threshold (float): The threshold above which a data point is considered anomalous.
-        reference_mean (float): Mean of the reference (normal) dataset.
+    A basic anomaly detector that uses distance to the nearest training sample
+    as an anomaly score. Thresholding this score allows for classification.
     """
-    
-    def __init__(self, backend: str = 'aer_simulator', threshold: float = 0.5):
-        self.backend = backend
+
+    def __init__(self, threshold=2.5):
+        """
+        Initialize the detector.
+
+        Parameters:
+        ----------
+        threshold : float
+            The decision threshold above which a score is considered anomalous.
+        """
         self.threshold = threshold
-        self.reference_mean = 0.0
+        self.training_data = None
 
-    def _encode(self, x: float) -> QuantumCircuit:
+    def fit(self, X):
         """
-        Encode a single value into a quantum circuit using Ry encoding.
+        Fit the model with training data.
 
-        Args:
-            x (float): The value to encode.
-        
-        Returns:
-            QuantumCircuit: The circuit encoding the value.
+        Parameters:
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Training data assumed to contain only normal samples.
         """
-        qc = QuantumCircuit(1)
-        qc.ry(x, 0)
-        qc.measure_all()
-        return qc
+        self.training_data = np.array(X)
+        if self.training_data.ndim == 1:
+            self.training_data = self.training_data.reshape(-1, 1)
 
-    def fit(self, X: np.ndarray):
+    def predict(self, X):
         """
-        Fit the detector to a dataset by learning the average pattern (mean).
+        Predict anomaly scores for new samples.
 
-        Args:
-            X (np.ndarray): 1D array of training data (normal behavior).
-        """
-        self.reference_mean = np.mean(X)
-
-    def predict(self, X: np.ndarray) -> np.ndarray:
-        """
-        Compute anomaly scores as the absolute difference from reference mean.
-
-        Args:
-            X (np.ndarray): 1D array of input data.
+        Parameters:
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input samples to score.
 
         Returns:
-            np.ndarray: Anomaly scores for each data point.
+        -------
+        scores : ndarray of shape (n_samples,)
+            Anomaly scores (lower is more normal).
         """
-        return np.abs(X - self.reference_mean)
+        X = np.array(X)
+        if X.ndim == 1:
+            X = X.reshape(-1, 1)
+        if self.training_data is None:
+            raise ValueError("Model has not been fit yet.")
 
-    def is_anomalous(self, score: float) -> bool:
+        distances = euclidean_distances(X, self.training_data)
+        scores = np.min(distances, axis=1)
+        return scores
+
+    def is_anomalous(self, score):
         """
-        Decide if a score indicates an anomaly.
+        Check if a score exceeds the threshold.
 
-        Args:
-            score (float): Anomaly score.
+        Parameters:
+        ----------
+        score : float
+            Anomaly score for a sample.
 
         Returns:
-            bool: True if anomalous, False otherwise.
+        -------
+        bool
+            True if score > threshold (anomalous), else False.
         """
         return score > self.threshold
