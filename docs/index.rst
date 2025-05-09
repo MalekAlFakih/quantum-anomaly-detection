@@ -4,7 +4,6 @@ Welcome to Quantum Anomaly Detection's documentation!
 ======================================================
 
 **QuantumAnomalyDetector** is a quantum-inspired anomaly detection toolkit using locally normalized k-NN scoring.
-It supports multivariate anomaly detection and is designed for benchmarking against classical methods.
 
 .. toctree::
    :maxdepth: 2
@@ -13,5 +12,7 @@ It supports multivariate anomaly detection and is designed for benchmarking agai
    installation
    usage
    api
-   examples
-
+   theory
+   thresholding
+   evaluation
+   tutorials/examples
