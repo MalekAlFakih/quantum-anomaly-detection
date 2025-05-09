@@ -11,7 +11,7 @@ Welcome to Quantum Anomaly Detection's documentation!
 
    installation
    usage
-   api
+   api_reference
    theory
    thresholding
    evaluation
