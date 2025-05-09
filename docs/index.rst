@@ -16,3 +16,4 @@ Welcome to Quantum Anomaly Detection's documentation!
    thresholding
    evaluation
    tutorials/examples
+   conclusion

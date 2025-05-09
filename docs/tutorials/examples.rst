@@ -16,12 +16,7 @@ Quickstart
    scores = qad.predict(X_test)
    preds = [qad.is_anomalous(s) for s in scores]
 
-Run on Hypothyroid Dataset
----------------------------
+Run on Hypothyroid Dataset (Google Colab)
+-----------------------------------------
 
-See how we load, clean, and evaluate the model on real-world multivariate data.
-
-.. literalinclude:: ../notebooks/Hypothyroid_LOF_Quantum.ipynb
-   :language: python
-   :start-after: "# Quantum Anomaly Detection (LOF-Inspired)"
-   :end-before: "# End of Notebook"
+👉 `Open in Colab <https://colab.research.google.com/drive/1jMTVgWvlXf6HUxSR8ZujNrPzu1qVjgnE#scrollTo=25335cc8>`_
