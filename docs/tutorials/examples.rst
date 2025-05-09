@@ -19,4 +19,6 @@ Quickstart
 Run on Hypothyroid Dataset (Google Colab)
 -----------------------------------------
 
-👉 `Open in Colab <https://colab.research.google.com/drive/1jMTVgWvlXf6HUxSR8ZujNrPzu1qVjgnE#scrollTo=25335cc8>`_
+👉 **[Click here to open notebook in Google Colab](https://colab.research.google.com/drive/1jMTVgWvlXf6HUxSR8ZujNrPzu1qVjgnE#scrollTo=25335cc8)**
+
+This tutorial demonstrates how to load, clean, and evaluate the quantum anomaly detector on a real-world medical dataset.
