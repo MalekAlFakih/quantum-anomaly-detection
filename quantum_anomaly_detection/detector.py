@@ -8,99 +8,71 @@ Supports multivariate inputs. Can be used as a classical proxy for quantum behav
 """
 
 import numpy as np
-from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.neighbors import LocalOutlierFactor
 
 class QuantumAnomalyDetector:
     """
-    Quantum-inspired anomaly detector using LOF-style normalized k-NN distance.
-    """
+    Improved anomaly detector using Local Outlier Factor (LOF).
 
-    def __init__(self, k=10, contamination=0.05):
-        """
-        Parameters:
-        ----------
-        k : int
-            Number of neighbors to use.
-        contamination : float
-            Proportion of outliers expected (used to set threshold).
-        """
+    
+    Parameters
+    k : int
+        Number of neighbors for LOF.
+    contamination : float
+        Expected proportion of outliers.
+    model : LocalOutlierFactor
+        Underlying scikit-learn LOF model with `novelty=True`.
+    """
+    def __init__(self, k=20, contamination=0.03):
         self.k = k
         self.contamination = contamination
-        self.training_data = None
-        self.threshold = None
+        self.model = LocalOutlierFactor(
+            n_neighbors=self.k,
+            contamination=self.contamination,
+            novelty=True
+        )
 
     def fit(self, X):
         """
-        Fit the model to the training data and compute dynamic threshold.
+        Fit the LOF model on training data.
 
-        Parameters:
+        Parameters
         ----------
-        X : array-like of shape (n_samples, n_features)
-            Training data (assumed to be mostly normal).
+        X : array-like, shape (n_samples, n_features)
+            Training feature matrix (assumed mostly normal).
         """
-        self.training_data = np.array(X)
-        if self.training_data.ndim == 1:
-            self.training_data = self.training_data.reshape(-1, 1)
-
-        train_scores = self._lof_score(self.training_data)
-        self.threshold = np.percentile(train_scores, 100 * (1 - self.contamination))
+        X = np.asarray(X)
+        self.model.fit(X)
 
     def predict(self, X):
         """
-        Predict anomaly scores for test data.
+        Compute anomaly scores for new samples.
 
-        Parameters:
+        Parameters
         ----------
-        X : array-like of shape (n_samples, n_features)
+        X : array-like, shape (n_samples, n_features)
 
-        Returns:
+        Returns
         -------
-        scores : ndarray
-            LOF-style anomaly scores (higher = more anomalous)
+        scores : ndarray, shape (n_samples,)
+            Inverted LOF decision function (higher = more anomalous).
         """
-        return self._lof_score(X)
+        X = np.asarray(X)
+        # sklearn's decision_function: higher = more normal, so invert
+        return -self.model.decision_function(X)
 
     def is_anomalous(self, score):
         """
-        Determine if a score is anomalous.
+        Determine whether a given score is anomalous.
 
-        Parameters:
+        Parameters
         ----------
         score : float
+            Anomaly score from predict().
 
-        Returns:
+        Returns
         -------
         bool
         """
-        if self.threshold is None:
-            raise ValueError("Model must be fit before calling is_anomalous.")
-        return score > self.threshold
-
-    def _lof_score(self, X):
-        """
-        Compute LOF-style score for each sample in X.
-
-        Returns:
-        -------
-        scores : ndarray
-        """
-        X = np.array(X)
-        if X.ndim == 1:
-            X = X.reshape(-1, 1)
-        if self.training_data is None:
-            raise ValueError("Model has not been fit yet.")
-
-        dists = euclidean_distances(X, self.training_data)
-        knn_dist_X = np.sort(dists, axis=1)[:, :self.k].mean(axis=1)
-
-        
-        train_dists = euclidean_distances(self.training_data, self.training_data)
-        np.fill_diagonal(train_dists, np.inf)
-        knn_dist_neighbors = np.sort(train_dists, axis=1)[:, :self.k].mean(axis=1)
-
-        
-        ref_density = np.mean(knn_dist_neighbors)
-
-        
-        scores = knn_dist_X / (ref_density + 1e-10)
-        return scores
+        # model.offset_ is the LOF threshold on decision_function
+        return score > -self.model.offset_
