@@ -11,7 +11,7 @@ Quickstart
 
    from quantum_anomaly_detection import QuantumAnomalyDetector
 
-   qad = QuantumAnomalyDetector(k=10, contamination=0.05)
+   qad = QuantumAnomalyDetector(k=10, contamination=0.5)
    qad.fit(X_train)
    scores = qad.predict(X_test)
    preds = [qad.is_anomalous(s) for s in scores]
